@@ -36,15 +36,8 @@ ENDIF()
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-<<<<<<< HEAD
 # Dependency versions
 set(OPENSSL_MIN_VER "1.0.2") # EXACT | Do not set letter (the "status" version)
-=======
-# Dependency versions...
-set(OPENSSL_MIN_VER "1.0.1") # Minimum | Do not set the letter ("status") version
-# TODO: Remove OPENSSL_MAX_VER when 1.1.x is in master branch
-set(OPENSSL_MAX_VER "1.0.2") # Maximum | Do not set the letter ("status") version
->>>>>>> 5fbd9dc... Change OpenSSL min ver to 1.0.1, remove unnecessary PPA
 set(BOOST_MIN_VER "1.54.0") # Minimum
 # Prevent accidental building with DB v5, which isn't compatible with wallets built with DB v6
 IF(WITH_INCOMPATIBLE_BDB)
@@ -56,26 +49,10 @@ ENDIF()
 # Adds our custom find_package modules to the list of modules available for cmake
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
 
-<<<<<<< HEAD
 # Start of finding dependencies
 find_package(OpenSSL ${OPENSSL_MIN_VER} EXACT REQUIRED)
 # Windows isn't POSIX
 IF(NOT (CMAKE_SYSTEM_NAME MATCHES "Windows"))
-=======
-# Start of finding dependencies...
-find_package(OpenSSL ${OPENSSL_MIN_VER} REQUIRED)
-# TODO: Max 1.0.2 allowed at the moment. Remove this when 1.1.x is in master branch
-IF(OPENSSL_VERSION VERSION_GREATER ${OPENSSL_MAX_VER})
-  message(FATAL_ERROR "OpenSSL v${OPENSSL_VERSION} was found, but a maximum of v${OPENSSL_MAX_VER} is compatible.")
-ENDIF()
-
-IF(CMAKE_SYSTEM_NAME MATCHES "Windows")
-  message(STATUS "Windows system detected, turning off pthreads flag.")
-  # Don't use pthreads on non-POSIX Windows
-  set(THREADS_PREFER_PTHREAD_FLAG OFF)
-ELSE()
-  message(STATUS "Non-Windows system detected, turning on pthreads flag.")
->>>>>>> 5fbd9dc... Change OpenSSL min ver to 1.0.1, remove unnecessary PPA
   # Tells find_package(Threads) to get pthread.h & use -lpthread compile flag
   set(THREADS_PREFER_PTHREAD_FLAG ON)
 ENDIF()
