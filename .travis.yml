@@ -5,8 +5,12 @@ os:
 compiler:
   - gcc
   - clang
+<<<<<<< HEAD
 before_install:
   - if [ $TRAVIS_OS_NAME = linux ]; then sudo add-apt-repository ppa:0k53d-karl-f830m/openssl -y; fi
+=======
+# Installing deps
+>>>>>>> 5fbd9dc... Change OpenSSL min ver to 1.0.1, remove unnecessary PPA
 install:
   - if [ $TRAVIS_OS_NAME = linux ]; then sudo apt-get -qq update && sudo apt-get install -y libdb++-dev libdb-dev openssl libboost-all-dev; fi
   - if [ $TRAVIS_OS_NAME = osx ]; then brew list openssl &>/dev/null || brew install openssl; fi
