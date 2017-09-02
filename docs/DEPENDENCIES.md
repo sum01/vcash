@@ -1,34 +1,28 @@
-Required dependencies
+Required Dependencies
 ======
 You should always use the highest version available that conforms to these dependencies.
 
-|Dependency |Version             |Names on Ubuntu          |Names on Homebrew
-|:----------|:------------------:|:-----------------------:|:------:
-|Boost      |min. `1.54`         |`libboost-all-dev`       |`boost`
-|Berkeley DB|min. `5.0` max `6.1`|`libdb++-dev` `libdb-dev`|`berkeley-db`
-|OpenSSL    |min/max `1.0.2`     |`openssl`                |`openssl`
+|Dependency |Version                 |Name on Debian/Ubuntu    |Name on Arch |Name on Homebrew
+|:----------|:----------------------:|:-----------------------:|:-----------:|:---:
+|Boost      |min. `1.54`             |`libboost-all-dev`       |`boost`      |`boost`
+|Berkeley DB|min. `5.0` max `6.1`    |`libdb++-dev` `libdb-dev`|`db`         |`berkeley-db`
+|OpenSSL    |min. `1.0.1` max `1.0.2`|`openssl` `libssl-dev`   |`openssl-1.0`|`openssl`
 
-Build-time dependencies
----
-|Dependency        |Linux        |OSX               |Windows
-|:----------------:|:-----------:|:----------------:|:---:
-|`CMake`           |✔️            |✔️                 |✔️
-|`Make`            |✔️            |✔️                 |❌
-|`NMake` (optional)|❌            |❌                 |✔️
-|C++ compiler      |`GCC` `Clang`|`GCC` `AppleClang`|`MSVC`
+**Build tools for Linux & macOS:** `cmake`, `make`, and a C++ compiler such as `GCC` or `Clang`  
+**Build tools for Windows:** `cmake`, and a C++ compiler such as `MSVC`
 
 Windows downloads
 ---
-Visual Studio comes with the `MSVC` compiler and C++ libraries if you select "Desktop Development with C++" when installing.  
+[Visual Studio 2017](https://www.visualstudio.com) comes with the `MSVC` compiler. Select "Desktop Development with C++" when installing.  
+[Cmake](https://cmake.org/download/)  
+[Boost](https://bintray.com/boostorg/release/boost-binaries) - Click the version, then `Files`, and install a version with a `msvc-14.1` suffix  
+[OpenSSL](https://slproweb.com/products/Win32OpenSSL.html) - Install the full (not light) version.  
+[Berkeley DB](http://www.oracle.com/technetwork/database/database-technologies/berkeleydb/downloads/index-082944.html) - Remove `otn/` from your download link to avoid making an account.
 
-[Berkeley DB](http://www.oracle.com/technetwork/database/database-technologies/berkeleydb/downloads/index-082944.html) -- Copy the download link for your desired version, and remove `otn/` from the link.  
-[Boost binaries](https://sourceforge.net/projects/boost/files/boost-binaries/)  
-[OpenSSL binaries](https://slproweb.com/products/Win32OpenSSL.html) -- Get the full developer version, not light.  
-[Visual Studio](https://www.visualstudio.com)  
-[Cmake](https://cmake.org/download/)   
-
-OSX downloads
+macOS downloads
 ---
-[Homebrew](https://brew.sh/) -- Make sure to follow the setup guide on their site.  
+[Homebrew package manager](https://brew.sh/) - Make sure to follow the setup guide on their website.  
 
-Homebrew currently gets a Berkeley DB version too high, so use `brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/1e62c645b2fc2d82042d9f7c364c6a246f2e11ed/Formula/berkeley-db.rb`
+Homebrew downloads an incompatible Berkeley DB version, so use `brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/1e62c645b2fc2d82042d9f7c364c6a246f2e11ed/Formula/berkeley-db.rb` to install version `6.1.26`.  
+
+Also, make sure you don't accidentally upgrade it by running `brew pin berkeley-db`
