@@ -2,7 +2,10 @@
 # Vcash
 > A decentralized currency for the internet.
 
-[![Donate BTC](https://img.shields.io/badge/Donate-BTC-yellow.svg)](https://blockchain.info/address/3MTVHcDrbiwrp5N6rT2DwrMCXMBP3rT7ty) [![Latest GitHub release](https://img.shields.io/github/release/openvcash/vcash.svg)](https://github.com/openvcash/vcash/releases/latest) [![Build status](https://travis-ci.org/openvcash/vcash.svg?branch=master)](https://travis-ci.org/openvcash/vcash)  
+[![Donate](https://img.shields.io/badge/donate-BTC-yellow.svg)](https://blockchain.info/address/35nXEZoiZCVQKGTLR63XUhPfqWszBihFkd)
+[![Slack](https://slack.vcash.info/badge.svg)](https://slack.vcash.info/)
+[![Release](https://img.shields.io/github/release/openvcash/vcash.svg)](https://github.com/openvcash/vcash/releases/latest)  
+[![TravisCI](https://img.shields.io/travis/openvcash/vcash/master.svg?label=Linux%20%26%20macOS%20build)](https://travis-ci.org/openvcash/vcash)
 
 https://vcash.info/  
 
@@ -10,7 +13,13 @@ What is Vcash?
 ---
 Vcash is a decentralized internet currency that enables you to send money to anyone in the world, instantly, and at almost no cost.
 
-Vcash features include [Peercoin](https://github.com/ppcoin/ppcoin) PoS, [Bitcoin](https://github.com/bitcoin/bitcoin) PoW consensus, a UDP layer, an off-chain transaction lock voting system called ZeroTime, an Incentive Reward voting system, and a client-side blending system called ChainBlender.
+## Features of Vcash
+- 3-tiered network using [PoW,](https://github.com/openvcash/papers/blob/master/rewardv3.pdf) [PoS,](https://github.com/openvcash/docs.vcash.info/blob/master/docs/block/generation/proof-of-stake.md) and [incentive nodes.](https://github.com/openvcash/papers/blob/master/incentive.pdf)
+- [Zerotime:](https://github.com/openvcash/papers/blob/master/zerotime.pdf) a near-instantaneous off-chain transaction protocol.
+- [Chainblender:](https://github.com/openvcash/papers/blob/master/chainblender.pdf) an (optional) client-side blending system to protect your anonymity.
+- [An average block time of 100 seconds.](https://github.com/openvcash/papers/blob/master/scaling_the_blockchain.pdf)
+- Fully encrypted network, a UDP layer, and port randomization.
+- Blake256 8-rounds hash.
 
 Docs and whitepapers
 ---
@@ -20,35 +29,41 @@ Read [common issues](docs/COMMON_ISSUES.md) if you're having problems related to
 
 Building from source
 ---
+There are currently two ways to build the source code: [CMake](https://cmake.org/) and [Boost.](http://www.boost.org/build/) CMake relies on the dependencies to be installed system-wide, while Boost-build requires you to build and compile dependencies into the [vcash/deps](deps) folder.
+
+### Building with CMake
 [Dependencies can be found here.](docs/DEPENDENCIES.md)  
 Read [BUILDING](docs/BUILDING.md) before attempting to build from source.  
-
-There are currently two ways to build the source code: [CMake](https://cmake.org/) and [Boost.](http://www.boost.org/build/)
-
-CMake relies on the dependencies to be installed normally, while Boost-build requires you to build and compile dependencies into the [vcash/deps](deps) folder.  
-The following instructions are only for CMake.
 
 #### Windows
 1. Install [the dependencies](docs/DEPENDENCIES.md) to their default locations.
 2. Download and extract the [Source code (zip).](https://github.com/openvcash/vcash/releases/latest)
-3. Run `cmake-gui`, select the source code and target build folders, any needed flags, then click configure/generate to start the build process.
-4. Open `Vcash.sln` with Visual Studio, select `Release` as build type, and then press the build button to start building Vcash.
-
-#### Linux & Mac
-1. Install [the dependencies](docs/DEPENDENCIES.md) with your package manager.
-2. Download the [Source code (tar.gz)](https://github.com/openvcash/vcash/releases/latest) to your `~/Downloads` folder.
-3. Run the following commands from your terminal...
+3. Run the following from your command prompt...  
 ```
-tar -xzf ~/Downloads/vcash-*.tar.gz
-cd ~/Downloads/vcash-*/
+cd C:\path\to\vcash
+cmake -G "Visual Studio 15 2017 Win64" -T v141,host=x64 CMakeLists.txt
+msbuild Vcash.sln /p:Configuration=Release /p:Platform=x64
+```
+If you want to compile faster, add the `/m:1` flag to `msbuild`, where `1` is your cpu core count.
+
+Once done compiling, you should have a `vcash.exe` you can run.
+
+#### Linux & macOS
+1. Install [the dependencies](docs/DEPENDENCIES.md) with your package manager.
+2. Download and extract the [Source code (tar.gz)](https://github.com/openvcash/vcash/releases/latest)
+3. Run the following commands from your terminal...  
+```
+cd /path/to/vcash
 cmake CMakeLists.txt
 make
 make install
 ```
+If you want to compile faster, add the `-j$(nproc)` flag to `make`. Requires the [GNU coreutils.](https://www.gnu.org/software/coreutils/coreutils.html)  
+4. (OPTIONAL) Install the rpc script with `install -m755 rpc.sh /usr/local/bin/vcashrpc.sh`
 
-When finished, you should be able to run `vcashd` from your terminal.  
+After `make install`, you should be able to run `vcashd` from your terminal.  
 
-**Arch Linux**  
+###### Arch Linux  
 [![The AUR PKGBUILD](https://img.shields.io/aur/version/vcash.svg)](https://aur.archlinux.org/packages/vcash/) is available, which builds and installs the source code from the latest release.
 
 If you don't know how to install something from the Arch User Repository, [read this Arch wiki post](https://wiki.archlinux.org/index.php/AUR_helpers) or [this post on the forums.](https://forum.vcash.info/d/56-arch-linux-aur-pkgbuild-s)
