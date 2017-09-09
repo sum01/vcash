@@ -59,9 +59,8 @@ make
 make install
 ```
 If you want to compile faster, add the `-j$(nproc)` flag to `make`. Requires the [GNU coreutils.](https://www.gnu.org/software/coreutils/coreutils.html)  
-4. (OPTIONAL) Install the rpc script with `install -m755 rpc.sh /usr/local/bin/vcashrpc.sh`
 
-After `make install`, you should be able to run `vcashd` from your terminal.  
+After `make install`, you should be able to run `vcashd` and `sh vcashrpc.sh` from your terminal.  
 
 ###### Arch Linux  
 [![The AUR PKGBUILD](https://img.shields.io/aur/version/vcash.svg)](https://aur.archlinux.org/packages/vcash/) is available, which builds and installs the source code from the latest release.

@@ -78,7 +78,7 @@ IF(BERKELEYDB_VERSION VERSION_GREATER "${BERKELEYDB_MAX_VER}")
   message(FATAL_ERROR "The detected BerkeleyDB v${BERKELEYDB_VERSION} isn't compatible! Maximum v${BERKELEYDB_MAX_VER} is compatible.")
 # Throw a warning if the user has DB ver < 6 but continue building
 ELSEIF(BERKELEYDB_VERSION VERSION_LESS "6.0.0")
-  message(WARNING "Pre-existing wallet data is not backwards compatible with version v5 of Berkeley DB if it was originally built with v6. \
+  message(WARNING "Pre-existing wallet data is not backwards compatible with version v5 of Berkeley DB if it was originally built with v6. \n
     Read \"docs/BUILDING.md\" for more info.")
 ENDIF()
 
@@ -324,17 +324,20 @@ IF(NOT CMAKE_INSTALL_LIBDIR)
   set(CMAKE_INSTALL_LIBDIR lib)
 ENDIF()
 
-# Output the paths that will be used for installation
-# CMAKE_INSTALL_PREFIX is auto-set by cmake if the user doesn't specify it
-message(STATUS "Using installation bindir path: ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}")
-message(STATUS "Using installation libdir path: ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
-# BINDIR and LIBDIR will set to system-specific defaults if they are not set by the user
-# https://cmake.org/cmake/help/latest/module/GNUInstallDirs.html#module:GNUInstallDirs
+# ARCHIVE is for STATIC libs
 install(TARGETS vcashd database coin
   RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 )
+
+# Install the rpc.sh if not Windows | Trying to avoid doing IF(UNIX) for cross-compiling
+IF(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
+  install(FILES rpc.sh
+    PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE # Should be equivilent to chmod 755
+    DESTINATION "${CMAKE_INSTALL_BINDIR}"
+    RENAME "vcashrpc.sh" # Avoid potential naming conflict if installed in /usr/bin
+  )
+ENDIF()
 
 # Consider adding the following functions..
 # add_test https://cmake.org/cmake/help/latest/command/add_test.html If added, then TravisCI needs `make test` added to `.travis.yml`
