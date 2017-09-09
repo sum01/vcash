@@ -1,4 +1,6 @@
-# Version 1.0.1
+# FindBerkeleyDB
+# Version 1.0.1.1
+# Finds the BerkeleyDB includes and libraries (`db` `db_cxx` `db_stl` `db_sql`). A minimum of one of the libs is required, or it fails.
 #
 # Output variables to be used in CMakeLists.txt
 # ^^^^^^^^^^^
@@ -38,15 +40,6 @@ ELSE()
   set(_BDB_HINTS "")
 ENDIF()
 
-# Library search suffixes | aka /usr/${_BDB_L_SUF} if searching /usr
-# Only using a var for this because it's reused multiple times
-list(APPEND _BDB_L_SUF
-  "lib"
-  "libs"
-  "lib64"
-  "libs64"
-)
-
 # Allow user to pass a path instead of guessing
 IF(BERKELEYDB_ROOT)
   list(APPEND _BDB_PATHS "${BERKELEYDB_ROOT}")
@@ -84,7 +77,7 @@ ENDIF()
 
 # Find includes path | This is passed directly to CMakeLists.txt without moving it into a different var.
 find_path(BERKELEYDB_INCLUDE_DIRS
-  NAMES   "db.h" "db_cxx.h"
+  NAMES "db.h" "db_cxx.h"
   HINTS ${_BDB_HINTS}
   PATH_SUFFIXES "include" "includes"
   PATHS ${_BDB_PATHS}
@@ -130,10 +123,19 @@ function(set_db_names output_var target_db)
   set(${output_var} "${_libname_list}" PARENT_SCOPE)
 endfunction()
 
+# Library search suffixes | aka /usr/${_BDB_L_SUF} if searching /usr
+# Only using a var for this because it's reused multiple times
+list(APPEND _BDB_L_SUF
+  "lib"
+  "libs"
+  "lib64"
+  "libs64"
+)
+
 # Checks for if the user used custom flags for the library names...
 # else uses function to set db libnames used in find_library() calls.
 IF(BERKELEYDB_LIBNAME)
-    list(APPEND _BDB_LIBNAMES "${BERKELEYDB_LIBNAME}")
+  list(APPEND _BDB_LIBNAMES "${BERKELEYDB_LIBNAME}")
 ELSE()
   set_db_names(_BDB_LIBNAMES "db")
 ENDIF()
