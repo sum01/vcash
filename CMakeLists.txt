@@ -330,12 +330,22 @@ install(TARGETS vcashd database coin
   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 )
 
+# TODO: Add a Windows batch/powershell RPC script, uncomment this, and delete the currently used install(FILES)
+#IF(CMAKE_SYSTEM_NAME MATCHES "Windows")
+#  set(_VCASH_RPC_NAME "vcashrpc.ps")
+#ELSE()
+#  set(_VCASH_RPC_NAME "vcashrpc")
+#ENDIF()
+#install(FILES ${_VCASH_RPC_NAME}
+#  PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE # Should be equivilent to chmod 755
+#  DESTINATION "${CMAKE_INSTALL_BINDIR}"
+#)
+
 # Install the rpc.sh if not Windows | Trying to avoid doing IF(UNIX) for cross-compiling
 IF(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
-  install(FILES rpc.sh
+  install(FILES vcashrpc
     PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE # Should be equivilent to chmod 755
     DESTINATION "${CMAKE_INSTALL_BINDIR}"
-    RENAME "vcashrpc.sh" # Avoid potential naming conflict if installed in /usr/bin
   )
 ENDIF()
 
