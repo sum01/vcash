@@ -142,7 +142,7 @@ ELSEIF(CMAKE_CXX_COMPILER_ID MATCHES "Clang") # MATCHES Clang and AppleClang
   # NOTE: Do we really need this flag? Copied from Jamfile
   list(APPEND _definitions "-DBOOST_NO_CXX11_NUMERIC_LIMITS")
 # GCC compiler
-ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_BUILD_TYPE STREQUAL "Release")
   message(STATUS "GCC compiler detected, setting definitions.")
   # 02 optimization required to build on GCC >= v6, otherwise it fails
   list(APPEND _definitions "-O2")
