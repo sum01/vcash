@@ -2,11 +2,12 @@
 # Vcash
 > A decentralized currency for the internet.
 
-[![Release](https://img.shields.io/github/release/openvcash/vcash.svg)](https://github.com/openvcash/vcash/releases/latest)  
+[![Release](https://img.shields.io/github/release/openvcash/vcash.svg)](https://github.com/openvcash/vcash/releases/latest)
 [![TravisCI](https://img.shields.io/travis/openvcash/vcash/master.svg?label=Unix%20build)](https://travis-ci.org/openvcash/vcash)  
 [![Donate](https://img.shields.io/badge/donate-BTC-ff9900.svg)](https://blockchain.info/address/35nXEZoiZCVQKGTLR63XUhPfqWszBihFkd)
+[![AUR](https://img.shields.io/aur/version/vcash.svg)](https://aur.archlinux.org/packages/vcash/)
 [![Slack](https://img.shields.io/badge/chat-slack-orange.svg)](https://slack.vcash.info/)
-[![Forum](https://img.shields.io/badge/chat-forum-b4082a.svg)](https://forum.vcash.info/)  
+[![Forum](https://img.shields.io/badge/chat-forum-b4082a.svg)](https://forum.vcash.info/)
 
 https://vcash.info/  
 
@@ -21,11 +22,8 @@ Vcash is a decentralized internet currency that enables you to send money to any
 - Fully encrypted network, a UDP layer, and port randomization.
 - Blake256 8-rounds hash.
 
-## Docs and Whitepapers
-[The docs](https://docs.vcash.info/), their [source on github,](https://github.com/openvcash/docs.vcash.info) and [the whitepapers.](https://github.com/openvcash/papers)
+## Docs, building, etc.
+If you want to build from source, or you need any other info, [read the wiki!](https://github.com/openvcash/vcash/wiki)
 
-## Building from source
-To compile from source, or for any other info, [read the wiki!](https://github.com/openvcash/vcash/wiki)
-
-# License
+## License
 Vcash is released under the terms of the AGPL-3.0 license. See [LICENSE](LICENSE) for more information.
