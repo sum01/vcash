@@ -1,56 +1,48 @@
-# Dependency versions & find_package() commands.
-# Only things used in all libs and the binary are set here, as to be more modular.
+# Dependency versions & find_package() commands in a small module for easier updating
 
-# TODO: Remove OPENSSL_MAX_VER when 1.1.x is in master branch
-# TODO: Remove BERKELEYDB_MAX_VER if/when Vcash is compatible with versions 6.2 or greater of BerkeleyDB
+# TODO: Remove OPENSSL_MAX_VER and max version check when 1.1.x is in master branch
+# TODO: Remove BERKELEYDB_MAX_VER and max version check when Vcash is compatible with version > 6.2
 
+# ~~ Boost ~~
+find_package(Boost "1.54.0" COMPONENTS system REQUIRED)
+
+# ~~ OpenSSL ~~
+# Do not set the letter ("status") version for OpenSSL!
+find_package(OpenSSL "1.0.1" REQUIRED)
+set(OPENSSL_MAX_VER "1.0.2") # Used in max ver check
+
+# ~~ Berkeley DB ~~
 # Prevent accidental building with DB v5, which isn't compatible with wallets built with DB v6
 option(WITH_INCOMPATIBLE_BDB "Enables building with a Berkeley DB v5 minimum instead of v6 minimum." OFF)
-
-# Do not set the letter ("status") version for either OPENSSL variables!
-set(OPENSSL_MIN_VER "1.0.1")
-set(OPENSSL_MAX_VER "1.0.2")
-
-set(BOOST_MIN_VER "1.54.0")
-
 IF(WITH_INCOMPATIBLE_BDB)
   set(BERKELEYDB_MIN_VER "5.0.0")
 ELSE()
   set(BERKELEYDB_MIN_VER "6.0.0")
 ENDIF()
-set(BERKELEYDB_MAX_VER "6.1.36")
+set(BERKELEYDB_MAX_VER "6.1.36") # Last release ver before v6.2, which isn't compatible
+find_package(BerkeleyDB ${BERKELEYDB_MIN_VER} REQUIRED)
 
+# ~~ Threads ~~
 IF(CMAKE_SYSTEM_NAME MATCHES "Windows")
-  # Don't use pthreads on non-POSIX Windows
+  # Don't use pthreads on Windows (not POSIX)
   message(STATUS "${CMAKE_SYSTEM_NAME} detected, not using pthread...")
   set(THREADS_PREFER_PTHREAD_FLAG OFF)
 ELSE()
   # Tells find_package(Threads) to get pthread.h & use -lpthread compile flag
-  # Should only get set on non-Windows, aka Unix
   message(STATUS "${CMAKE_SYSTEM_NAME} detected, using pthread...")
   set(THREADS_PREFER_PTHREAD_FLAG ON)
 ENDIF()
+find_package(Threads REQUIRED) # pthread not needed specificly, code uses #include <thread>
 
-# Needed in both lib coin and database
-find_package(Boost ${BOOST_MIN_VER} COMPONENTS system REQUIRED)
-find_package(OpenSSL ${OPENSSL_MIN_VER} REQUIRED)
-find_package(BerkeleyDB ${BERKELEYDB_MIN_VER} REQUIRED)
-find_package(Threads REQUIRED) # Not pthread specificly, code uses #include <thread>
-
-# ~~ Max version checks ~~
-# TODO: Max 1.0.2 allowed at the moment. Remove this when 1.1.x is in master branch
+# ~~ Max version checks after finding ~~
 IF(OPENSSL_VERSION VERSION_GREATER ${OPENSSL_MAX_VER})
-  message(FATAL_ERROR "OpenSSL v${OPENSSL_VERSION} was found, but a maximum of v${OPENSSL_MAX_VER} is compatible.")
+  message(FATAL_ERROR "The detected OpenSSL v${OPENSSL_VERSION} isn't compatible! Maximum of v${OPENSSL_MAX_VER} is compatible.")
 ENDIF()
 
-# TODO: Remove this max version check if/when Vcash is compatible with versions 6.2 or greater of BerkeleyDB
 IF(BERKELEYDB_VERSION VERSION_GREATER "${BERKELEYDB_MAX_VER}")
-  message(FATAL_ERROR "The detected BerkeleyDB v${BERKELEYDB_VERSION} isn't compatible! Maximum v${BERKELEYDB_MAX_VER} is compatible.")
+  message(FATAL_ERROR "The detected BerkeleyDB v${BERKELEYDB_VERSION} isn't compatible! Maximum of v${BERKELEYDB_MAX_VER} is compatible.")
 # Throw a warning if the user has DB ver < 6 but continue building
 ELSEIF(BERKELEYDB_VERSION VERSION_LESS "6.0.0")
   message(WARNING "Pre-existing wallet data is not backwards compatible with version v5 of Berkeley DB if it was originally built with v6. \n
     Read \"docs/BUILDING.md\" for more info.")
 ENDIF()
-
-# Quick bool var used to IF check in other modules
-set(VCASH_DEPS_SET TRUE)
