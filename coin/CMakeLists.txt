@@ -1,20 +1,6 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.1.3)
-
-project(Libcoin LANGUAGES C CXX)
-
-IF(NOT VCASH_MODPATH_SET)
-  list(APPEND CMAKE_MODULE_PATH "../cmake/modules")
-  set(VCASH_MODPATH_SET TRUE)
-ENDIF()
-IF(NOT VCASH_SETTINGS_SET)
-  include(xvc_settings)
-ENDIF()
-IF(NOT VCASH_DEPS_SET)
-  include(xvc_dependencies)
-ENDIF()
-IF(NOT VCASH_DEFS_SET)
-  include(xvc_definitions)
-ENDIF()
+# Builds the coin library
+# Add/delete paths to .cpp files when more are created/deleted.
+# Note: This is essentially a script for building the daemon, instead of a stand-alone cmake project.
 
 add_library(coin STATIC
   src/account.cpp
@@ -132,9 +118,7 @@ add_library(coin STATIC
 target_include_directories(coin
   PUBLIC include
   PUBLIC ../database/include
-  PUBLIC ${Boost_INCLUDE_DIRS}
-  PUBLIC ${OPENSSL_INCLUDE_DIR}
-  PUBLIC ${BERKELEYDB_INCLUDE_DIRS}
+  PRIVATE ${Boost_INCLUDE_DIRS}
+  PRIVATE ${OPENSSL_INCLUDE_DIR}
+  PRIVATE ${BERKELEYDB_INCLUDE_DIRS}
 )
-
-install(TARGETS coin ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")

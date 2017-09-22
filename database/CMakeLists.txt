@@ -1,20 +1,6 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.1.3)
-
-project(Libdatabase LANGUAGES C CXX)
-
-IF(NOT VCASH_MODPATH_SET)
-  list(APPEND CMAKE_MODULE_PATH "../cmake/modules")
-  set(VCASH_MODPATH_SET TRUE)
-ENDIF()
-IF(NOT VCASH_SETTINGS_SET)
-  include(xvc_settings)
-ENDIF()
-IF(NOT VCASH_DEPS_SET)
-  include(xvc_dependencies)
-ENDIF()
-IF(NOT VCASH_DEFS_SET)
-  include(xvc_definitions)
-ENDIF()
+# Builds the database library
+# Add/delete paths to .cpp files when more are created/deleted.
+# Note: This is essentially a script for building the daemon, instead of a stand-alone cmake project.
 
 add_library(database STATIC
   src/block.cpp
@@ -46,8 +32,6 @@ add_library(database STATIC
 
 target_include_directories(database
   PUBLIC include
-  PUBLIC ${Boost_INCLUDE_DIRS}
-  PUBLIC ${OPENSSL_INCLUDE_DIR}
+  PRIVATE ${Boost_INCLUDE_DIRS}
+  PRIVATE ${OPENSSL_INCLUDE_DIR}
 )
-
-install(TARGETS database ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
