@@ -1,11 +1,11 @@
-# Compiler definitions
+# Compiler definitions kept in a separate module for neatness
 
 # I believe this makes the binary 64-bit only, which should be noted somewhere...
-set(_definitions "-D_FILE_OFFSET_BITS=64")
+set(_xvc_definitions "-D_FILE_OFFSET_BITS=64")
 
 IF(CMAKE_BUILD_TYPE STREQUAL "Release")
   message(STATUS "Setting build flag for \"Release\" build-type.")
-  list(APPEND _definitions "-DNDEBUG")
+  list(APPEND _xvc_definitions "-DNDEBUG")
 ENDIF()
 
 # Adds compile definitions for the detected compiler
@@ -35,7 +35,7 @@ IF(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
   endmacro(get_WIN32_WINNT)
   get_WIN32_WINNT(ver)
 
-  list(APPEND _definitions
+  list(APPEND _xvc_definitions
     "-D_WIN32_WINNT=${ver}" # Specifies WinNT kernel to build for
     "-D_UNICODE"
     "-DUNICODE"
@@ -57,16 +57,14 @@ IF(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 ELSEIF(CMAKE_CXX_COMPILER_ID MATCHES "Clang") # MATCHES Clang and AppleClang
   message(STATUS "Clang compiler detected, setting definitions.")
   # NOTE: Do we really need this flag? Copied from Jamfile
-  list(APPEND _definitions "-DBOOST_NO_CXX11_NUMERIC_LIMITS")
+  list(APPEND _xvc_definitions "-DBOOST_NO_CXX11_NUMERIC_LIMITS")
 # GCC compiler
 ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_BUILD_TYPE STREQUAL "Release")
   message(STATUS "GCC compiler detected, setting definitions.")
   # 02 optimization required to build on GCC >= v6, otherwise it fails
-  list(APPEND _definitions "-O2")
+  list(APPEND _xvc_definitions "-O2")
 ENDIF()
 
 # Set all our various definitions
-message(STATUS "List of definitions to be used (delimited by semi-colon): ${_definitions}")
-add_definitions(${_definitions})
-
-set(VCASH_DEFS_SET TRUE)
+message(STATUS "List of definitions to be used (delimited by semi-colon): ${_xvc_definitions}")
+add_definitions(${_xvc_definitions})
