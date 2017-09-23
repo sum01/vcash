@@ -1,6 +1,5 @@
 # Builds the coin library
 # Add/delete paths to .cpp files when more are created/deleted.
-# Note: This is essentially a script for building the daemon, instead of a stand-alone cmake project.
 
 add_library(coin STATIC
   src/account.cpp
