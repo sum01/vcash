@@ -9,9 +9,10 @@ add_library(crawler STATIC
   src/stack.cpp
 )
 
+target_link_libraries(crawler
+  PUBLIC database
+)
+
 target_include_directories(crawler
   PUBLIC include
-  PUBLIC ../database/include
-  PRIVATE ${Boost_INCLUDE_DIRS}
-  PRIVATE ${OPENSSL_INCLUDE_DIR}
 )

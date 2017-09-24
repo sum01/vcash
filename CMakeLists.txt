@@ -65,10 +65,6 @@ IF(BUILD_VCASH_DAEMON)
   target_link_libraries(vcashd
     PUBLIC coin
     PUBLIC database
-    PRIVATE ${BERKELEYDB_LIBRARIES}
-    PRIVATE ${OPENSSL_LIBRARIES}
-    PRIVATE ${Boost_LIBRARIES}
-    PRIVATE Threads::Threads
   )
 ENDIF()
 
@@ -81,9 +77,6 @@ IF(BUILD_VCASH_CRAWLER)
   target_link_libraries(vcashc
     PUBLIC crawler
     PUBLIC database
-    PRIVATE ${OPENSSL_LIBRARIES}
-    PRIVATE ${Boost_LIBRARIES}
-    PRIVATE Threads::Threads
   )
 ENDIF()
 

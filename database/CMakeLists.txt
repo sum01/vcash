@@ -29,8 +29,14 @@ add_library(database STATIC
   src/whirlpool.cpp
 )
 
+target_link_libraries(database
+  PUBLIC ${Boost_LIBRARIES}
+  PUBLIC ${OPENSSL_LIBRARIES}
+  PUBLIC Threads::Threads
+)
+
 target_include_directories(database
   PUBLIC include
-  PRIVATE ${Boost_INCLUDE_DIRS}
-  PRIVATE ${OPENSSL_INCLUDE_DIR}
+  PUBLIC ${Boost_INCLUDE_DIRS}
+  PUBLIC ${OPENSSL_INCLUDE_DIR}
 )

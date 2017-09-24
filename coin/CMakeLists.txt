@@ -113,11 +113,12 @@ add_library(coin STATIC
   src/zerotime_question.cpp
   src/zerotime_vote.cpp
 )
+target_link_libraries(coin
+  PUBLIC database
+  PUBLIC ${BERKELEYDB_LIBRARIES}
+)
 
 target_include_directories(coin
   PUBLIC include
-  PUBLIC ../database/include
-  PRIVATE ${Boost_INCLUDE_DIRS}
-  PRIVATE ${OPENSSL_INCLUDE_DIR}
-  PRIVATE ${BERKELEYDB_INCLUDE_DIRS}
+  PUBLIC ${BERKELEYDB_INCLUDE_DIRS}
 )
