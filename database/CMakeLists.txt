@@ -29,6 +29,8 @@ add_library(database STATIC
   src/whirlpool.cpp
 )
 
+# FIXME: Threads::Threads seems to always trigger a quiet cmake error on Windows, but it doesn't break the build...
+# The problem is it's needed since #include <thread> is used everywhere, so we can't just not use findThreads on Windows.
 target_link_libraries(database
   PUBLIC ${Boost_LIBRARIES}
   PUBLIC ${OPENSSL_LIBRARIES}

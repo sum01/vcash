@@ -11,6 +11,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.1)
 
 # Get version string from constants.hpp
 file(STRINGS "coin/include/coin/constants.hpp" _VCASH_CONSTANTS)
+# Using a temperary version var, as the correct project variables are auto-filled after project()
 string(REGEX REPLACE ".*version_string = \"([0-9]+).([0-9]+).([0-9]+).([0-9]+)\".*" "\\1.\\2.\\3.\\4" _VCASH_VERSION "${_VCASH_CONSTANTS}")
 
 project(Vcash VERSION "${_VCASH_VERSION}" LANGUAGES C CXX)
@@ -34,54 +35,75 @@ ELSEIF(NOT CMAKE_BUILD_TYPE)
 ENDIF()
 
 # Flags to tell cmake which targets you want to build
-option(BUILD_VCASH_DAEMON "Builds the Vcash daemon." ON)
-option(BUILD_VCASH_CRAWLER "Builds the Vcash crawler." OFF)
+option(BUILD_VCASH_DAEMON "Build the Vcash daemon executable." ON)
+option(BUILD_VCASH_CRAWLER "Build the Vcash crawler executable." OFF)
+option(BUILD_VCASH_DATABASE "Build the Vcash database executable." OFF)
 # Fail if no targets are selected
-IF(NOT BUILD_VCASH_DAEMON AND NOT BUILD_VCASH_CRAWLER)
-  message(FATAL_ERROR "You did not select to build the daemon or crawler, stopping the build.")
+IF(NOT BUILD_VCASH_DAEMON AND NOT BUILD_VCASH_CRAWLER AND NOT BUILD_VCASH_DATABASE)
+  message(FATAL_ERROR "You did not select to build any executables, stopping the build.")
 ELSE()
   # Notify which targets will be built
-  message(STATUS "${CMAKE_PROJECT_NAME} build targets:")
+  message(STATUS "${CMAKE_PROJECT_NAME} exectuable build targets:")
   message(STATUS "  Daemon | ${BUILD_VCASH_DAEMON}")
   message(STATUS "  Crawler | ${BUILD_VCASH_CRAWLER}")
+  message(STATUS "  Database | ${BUILD_VCASH_DATABASE}")
 ENDIF()
 
 # Adds our custom find_package modules to the list of modules available for cmake
 list(APPEND CMAKE_MODULE_PATH "cmake/modules")
-include(xvc_dependencies)
-include(xvc_definitions)
+# Runs find_package() commands and checks if versions are compatible
+include(vcash_dependencies)
+# Runs add_definitions() with a list of custom definitions to correctly build Vcash
+include(vcash_definitions)
 
-# Both daemon & crawler use libdatabase
+# Build libdatabase | Everything uses libdatabase, so it's declared outside IF(BUILD_VCASH_X) checks
 add_subdirectory(database)
 
 IF(BUILD_VCASH_DAEMON)
+  # Build libcoin
   add_subdirectory(coin)
 
-  add_executable(vcashd coin/test/main.cpp)
-  list(APPEND _VCASH_EXE "vcashd") # Name of target to install in xvc_install.cmake
+  set(_VCASH_DAEMON_EXE_NAME "vcashd")
+  list(APPEND _VCASH_EXE "${_VCASH_DAEMON_EXE_NAME}")
 
-  # FIXME: Threads::Threads seems to always trigger a quiet cmake error on Windows, but it doesn't break the build..
-  # This links all our libs to vcashd.
-  target_link_libraries(vcashd
+  add_executable(${_VCASH_DAEMON_EXE_NAME} coin/test/main.cpp)
+
+  target_link_libraries(${_VCASH_DAEMON_EXE_NAME}
     PUBLIC coin
     PUBLIC database
   )
 ENDIF()
 
 IF(BUILD_VCASH_CRAWLER)
+  # Build libcrawler
   add_subdirectory(crawler)
 
-  add_executable(vcashc crawler/test/stack.cpp)
-  list(APPEND _VCASH_EXE "vcashc") # Name of target to install in xvc_install.cmake
+  set(_VCASH_CRAWLER_EXE_NAME "vcashc")
+  list(APPEND _VCASH_EXE "${_VCASH_CRAWLER_EXE_NAME}")
 
-  target_link_libraries(vcashc
+  add_executable(${_VCASH_CRAWLER_EXE_NAME} crawler/test/stack.cpp)
+
+  target_link_libraries(${_VCASH_CRAWLER_EXE_NAME}
     PUBLIC crawler
     PUBLIC database
   )
 ENDIF()
 
+IF(BUILD_VCASH_DATABASE)
+  # Doesn't require any other libs (libdatabase was already built above)
+
+  set(_VCASH_DB_EXE_NAME "vcashdb")
+  list(APPEND _VCASH_EXE "${_VCASH_DB_EXE_NAME}")
+
+  add_executable(${_VCASH_DB_EXE_NAME} database/test/stack.cpp)
+
+  target_link_libraries(${_VCASH_DB_EXE_NAME}
+    PUBLIC database
+  )
+ENDIF()
+
 # Runs the install script
-include(xvc_install)
+include(vcash_install)
 
 # Consider adding the following functions..
 # add_test https://cmake.org/cmake/help/latest/command/add_test.html If added, then TravisCI needs `make test` added to `.travis.yml`
