@@ -5,8 +5,12 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.1)
 # EVENTUALLY: 3.9 for the addition of a DESCRIPTION to project()
 # == END Minimum version requirement list ==
 #
-# For cross-compiling, read https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html#cross-compiling-toolchain
+# For cross-compiling, read https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html#cross-compiling-toolchain ...
+# and when cross-compiling for Windows, use the Cmake flag -D_WIN32_WINNT=XXXXX | literal format expected, ex: "0x0501" ...
+# Accepted values for _WIN32_WINNT are here https://docs.microsoft.com/en-us/cpp/porting/modifying-winver-and-win32-winnt
+#
 # Use -DBUILD_VCASH_CRAWLER=ON to build the crawler (OFF by default)
+# Use -DBUILD_VCASH_DATABASE=ON to build to database (OFF by default)
 # Use -DBUILD_VCASH_DAEMON=OFF to NOT build the daemon (ON by default)
 
 # Get version string from constants.hpp
@@ -24,13 +28,13 @@ message(STATUS "Starting Cmake build of ${CMAKE_PROJECT_NAME} v${PROJECT_VERSION
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Set system-specific settings
+# Set build-type options
 IF(CMAKE_CONFIGURATION_TYPES)
-  # Lists the available build options
+  # Sets the available build options for multi-config build systems
   set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Available build types." FORCE)
 ELSEIF(NOT CMAKE_BUILD_TYPE)
-    # Default to a release build if nothing is specified
     message(STATUS "Defaulting to Release build type since nothing was specified.")
+    # Sets the build type to Release (if not specified) on single-config build systems
     set(CMAKE_BUILD_TYPE Release)
 ENDIF()
 
@@ -53,22 +57,22 @@ ENDIF()
 list(APPEND CMAKE_MODULE_PATH "cmake/modules")
 # Runs find_package() commands and checks if versions are compatible
 include(vcash_dependencies)
-# Runs add_definitions() with a list of custom definitions to correctly build Vcash
+# Adds our list of custom definitions to the compiler definitions to correctly build Vcash
 include(vcash_definitions)
 
-# Build libdatabase | Everything uses libdatabase, so it's declared outside IF(BUILD_VCASH_X) checks
+# Build libdatabase | All executables use libdatabase, so we declare outside IF() checks
 add_subdirectory(database)
 
 IF(BUILD_VCASH_DAEMON)
   # Build libcoin
   add_subdirectory(coin)
 
-  set(_VCASH_DAEMON_EXE_NAME "vcashd")
-  list(APPEND _VCASH_EXE "${_VCASH_DAEMON_EXE_NAME}")
+  set(_VCASH_DAEMON_NAME "vcashd")
+  list(APPEND _VCASH_INSTALL_TARGETS "${_VCASH_DAEMON_NAME}")
 
-  add_executable(${_VCASH_DAEMON_EXE_NAME} coin/test/main.cpp)
+  add_executable(${_VCASH_DAEMON_NAME} coin/test/main.cpp)
 
-  target_link_libraries(${_VCASH_DAEMON_EXE_NAME}
+  target_link_libraries(${_VCASH_DAEMON_NAME}
     PUBLIC coin
     PUBLIC database
   )
@@ -78,12 +82,12 @@ IF(BUILD_VCASH_CRAWLER)
   # Build libcrawler
   add_subdirectory(crawler)
 
-  set(_VCASH_CRAWLER_EXE_NAME "vcashc")
-  list(APPEND _VCASH_EXE "${_VCASH_CRAWLER_EXE_NAME}")
+  set(_VCASH_CRAWLER_NAME "vcashc")
+  list(APPEND _VCASH_INSTALL_TARGETS "${_VCASH_CRAWLER_NAME}")
 
-  add_executable(${_VCASH_CRAWLER_EXE_NAME} crawler/test/stack.cpp)
+  add_executable(${_VCASH_CRAWLER_NAME} crawler/test/stack.cpp)
 
-  target_link_libraries(${_VCASH_CRAWLER_EXE_NAME}
+  target_link_libraries(${_VCASH_CRAWLER_NAME}
     PUBLIC crawler
     PUBLIC database
   )
@@ -92,12 +96,12 @@ ENDIF()
 IF(BUILD_VCASH_DATABASE)
   # Doesn't require any other libs (libdatabase was already built above)
 
-  set(_VCASH_DB_EXE_NAME "vcashdb")
-  list(APPEND _VCASH_EXE "${_VCASH_DB_EXE_NAME}")
+  set(_VCASH_DATABASE_NAME "vcashdb")
+  list(APPEND _VCASH_INSTALL_TARGETS "${_VCASH_DATABASE_NAME}")
 
-  add_executable(${_VCASH_DB_EXE_NAME} database/test/stack.cpp)
+  add_executable(${_VCASH_DATABASE_NAME} database/test/stack.cpp)
 
-  target_link_libraries(${_VCASH_DB_EXE_NAME}
+  target_link_libraries(${_VCASH_DATABASE_NAME}
     PUBLIC database
   )
 ENDIF()
