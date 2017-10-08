@@ -16,8 +16,9 @@ IF(OPENSSL_VERSION VERSION_GREATER ${OPENSSL_MAX_VER})
   message(FATAL_ERROR "The detected OpenSSL v${OPENSSL_VERSION} isn't compatible! Maximum of v${OPENSSL_MAX_VER} is compatible.")
 ENDIF()
 
-# ~~ Berkeley DB ~~
-IF(BUILD_VCASH_DAEMON) # Only the daemon needs Berkeley DB
+# Only libcoin needs Berkeley DB
+IF(BUILD_VCASH_DAEMON)
+  # ~~ Berkeley DB ~~
   # Prevent accidental building with DB v5, which isn't compatible with wallets built with DB v6
   option(WITH_INCOMPATIBLE_BDB "Enables building with a Berkeley DB v5 minimum instead of v6 minimum." OFF)
   IF(WITH_INCOMPATIBLE_BDB)
@@ -33,8 +34,7 @@ IF(BUILD_VCASH_DAEMON) # Only the daemon needs Berkeley DB
     message(FATAL_ERROR "The detected BerkeleyDB v${BERKELEYDB_VERSION} isn't compatible! Maximum of v${BERKELEYDB_MAX_VER} is compatible.")
   # Throw a warning if the user has DB ver < 6 but continue building
   ELSEIF(BERKELEYDB_VERSION VERSION_LESS "6.0.0")
-    message(WARNING "Pre-existing wallet data is not backwards compatible with version v5 of Berkeley DB if it was originally built with v6. \n
-      Read \"docs/BUILDING.md\" for more info.")
+    message(WARNING "Pre-existing wallet data is not backwards compatible with version v5 of Berkeley DB if it was originally built with v6. Read https://github.com/openvcash/vcash/wiki/Compile-With-Cmake#preamble--warning for more info.")
   ENDIF()
 ENDIF()
 
