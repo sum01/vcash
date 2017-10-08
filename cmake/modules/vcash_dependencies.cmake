@@ -1,6 +1,6 @@
 # Dependency versions & find_package() commands in a small module for easier updating
 
-# TODO: Remove OPENSSL_MAX_VER and max version check when 1.1.x is in master branch
+# TODO: Remove OPENSSL_MAX_VER and max version check when 1.1.x compatibility fix is merged to master branch
 # TODO: Remove BERKELEYDB_MAX_VER and max version check when Vcash is compatible with version > 6.2
 
 # ~~ Boost ~~
@@ -39,13 +39,28 @@ IF(BUILD_VCASH_DAEMON) # Only the daemon needs Berkeley DB
 ENDIF()
 
 # ~~ Threads ~~
-IF(CMAKE_SYSTEM_NAME MATCHES "Windows")
-  # Don't use pthreads on Windows (not POSIX)
-  message(STATUS "${CMAKE_SYSTEM_NAME} detected, not using pthread...")
-  set(THREADS_PREFER_PTHREAD_FLAG OFF)
-ELSE()
-  # Tells find_package(Threads) to get pthread.h & use -lpthread compile flag
-  message(STATUS "${CMAKE_SYSTEM_NAME} detected, using pthread...")
-  set(THREADS_PREFER_PTHREAD_FLAG ON)
+set(_USER_DECLARED_THREADS_VAR FALSE)
+
+foreach(_CHECK_TARGET_VAR "${CMAKE_USE_SPROC_INIT}" "${CMAKE_USE_WIN32_THREADS_INIT}" "${CMAKE_USE_PTHREADS_INIT}" "${CMAKE_HP_PTHREADS_INIT}" "${CMAKE_THREAD_PREFER_PTHREAD}" "${THREADS_PREFER_PTHREAD_FLAG}")
+  # Checks if any of the FindThreads INIT vars were passed by the user
+  IF(${_CHECK_TARGET_VAR})
+    set(_USER_DECLARED_THREADS_VAR TRUE)
+    break()
+  ENDIF()
+endforeach()
+
+# Only default threads settings if none were passed by the user
+IF(NOT _USER_DECLARED_THREADS_VAR)
+  IF(CMAKE_SYSTEM_NAME MATCHES "Windows")
+    message(STATUS "${CMAKE_SYSTEM_NAME} detected, using WIN32 threads...")
+    # Tells FindThreads to get the WIN32 threads
+    set(CMAKE_USE_WIN32_THREADS_INIT ON)
+  ELSE()
+    # Tells find_package(Threads) to get pthread.h & use -lpthread compile flag
+    message(STATUS "Non-Windows OS detected, defaulting to using pthreads...")
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+  ENDIF()
 ENDIF()
-find_package(Threads REQUIRED) # pthread not needed specificly, code uses #include <thread>
+
+# Code uses #include <thread>
+find_package(Threads REQUIRED)
