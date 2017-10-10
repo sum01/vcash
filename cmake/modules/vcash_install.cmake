@@ -27,7 +27,7 @@ foreach(_VCASH_INSTALL_TARGET ${_VCASH_INSTALL_TARGETS})
 endforeach()
 
 # Installs vcashrpc if not on Windows
-IF(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
+IF(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
   message(STATUS "The vcashrpc script will be installed.")
   install(FILES vcashrpc
     PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE # Basically chmod 755
@@ -36,7 +36,7 @@ IF(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
 ENDIF()
 
 # TODO: Add a Windows batch/powershell RPC script, uncomment this, and delete the currently used install(FILES)
-#IF(CMAKE_SYSTEM_NAME MATCHES "Windows")
+#IF(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 #  set(_VCASH_RPC_NAME "vcashrpc.ps")
 #ELSE()
 #  set(_VCASH_RPC_NAME "vcashrpc")

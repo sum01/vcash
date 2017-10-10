@@ -1,4 +1,4 @@
-# FindBerkeleyDB.cmake - version 2.0.0
+# FindBerkeleyDB.cmake - version 2.0.1
 # This module finds the BerkeleyDB includes and libraries ("db" "db_cxx" "db_stl" "db_sql"). Minimum 1 library found or it fails.
 #
 # Output variables to be used in CMakeLists.txt
@@ -29,7 +29,7 @@ ENDIF()
 # Allow user to pass a path instead of guessing
 IF(BERKELEYDB_ROOT)
   set(_BERKELEYDB_PATHS "${BERKELEYDB_ROOT}")
-ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Windows")
+ELSEIF(CMAKE_SYSTEM_NAME STREQUAL "Windows")
   # Shameless copy-paste from FindOpenSSL.cmake v3.8
   file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _programfiles)
   list(APPEND _BERKELEYDB_HINTS "${_programfiles}")

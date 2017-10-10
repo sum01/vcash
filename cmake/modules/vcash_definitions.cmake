@@ -7,7 +7,7 @@ list(APPEND _VCASH_DEFINITIONS "-D_FILE_OFFSET_BITS=64")
 # MSVC compiler
 IF(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
   # Technically you can get MSVC on non-Windows OS's, so we check here
-  IF(CMAKE_SYSTEM_NAME MATCHES "Windows")
+  IF(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     # Windows-specific MSVC settings
     # Check if the user has declared their own kernel flag
     IF(NOT _WIN32_WINNT)

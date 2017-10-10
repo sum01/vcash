@@ -51,7 +51,7 @@ endforeach()
 
 # Only default threads settings if none were passed by the user
 IF(NOT _USER_DECLARED_THREADS_VAR)
-  IF(CMAKE_SYSTEM_NAME MATCHES "Windows")
+  IF(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     message(STATUS "${CMAKE_SYSTEM_NAME} detected, using WIN32 threads...")
     # Tells FindThreads to get the WIN32 threads
     set(CMAKE_USE_WIN32_THREADS_INIT ON)
