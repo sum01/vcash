@@ -57,17 +57,11 @@ IF(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
   # "By default, ICF is on if REF is on"
   list(APPEND _VCASH_RELEASE_DEFINITIONS "-DOPT:REF")
 
-  # FIXME - these ignore flags seem to be ironicly ignored
-  # Ignore list:
+  # FIXME implement these ignore codes for MSVC (seems to ignore it for some reason)
+  # /ignore:XXXX seems to be proper format, but doesn't actually work
   # 4267 & 4244 to hide "conversion from 'X' to 'Y', possible loss of data"
   # 4005 to hide "'WIN32_LEAN_AND_MEAN': macro redefinition"
-  # set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} /ignore:4267,4244,4005")
-  # set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /ignore:4267,4244,4005")
 
-# Clang and AppleClang compilers (detected as different by Cmake, so we use MATCHES)
-ELSEIF(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  # NOTE: Do we really need this flag? Copied from Jamfile
-  list(APPEND _VCASH_DEFINITIONS "-DBOOST_NO_CXX11_NUMERIC_LIMITS")
 # GCC compiler
 ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   # 02 optimization required to build on GCC >= v6, otherwise it fails
