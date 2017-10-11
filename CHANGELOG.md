@@ -20,7 +20,7 @@ The format is based on [Keep a Changelog.](http://keepachangelog.com/en/1.0.0/)
 ### Fixed
 - Depreciated `ptr`'s
 - Some Windows errors
-- #28 disabled ipv6 rpc bug
+- [#28] disabled ipv6 rpc bug
 
 ## [0.6.0.4] - 2017-06-09
 - TCP protocol version and minimum version increment.
@@ -151,3 +151,4 @@ This upgrade brings enforcement of incentive payments as well as collateral back
 [0.6.0.3]: https://github.com/openvcash/vcash/compare/0.6.0.2...0.6.0.3
 [0.6.0.2]: https://github.com/openvcash/vcash/compare/0.6.0.1...0.6.0.2
 [0.6.0.1]: https://github.com/openvcash/vcash/compare/0.5.0...0.6.0.1
+[#28]: https://github.com/openvcash/vcash/issues/28
