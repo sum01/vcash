@@ -7,39 +7,33 @@ list(APPEND _VCASH_DEFINITIONS "-D_FILE_OFFSET_BITS=64")
 # MSVC compiler
 IF(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
   # Technically you can get MSVC on non-Windows OS's, so we check here
-  IF(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  IF(CMAKE_SYSTEM_NAME STREQUAL "Windows" AND NOT _WIN32_WINNT)
     # Windows-specific MSVC settings
     # Check if the user has declared their own kernel flag
-    IF(NOT _WIN32_WINNT)
-      # Copy-paste from https://stackoverflow.com/a/40217291
-      # Gets correct WinNT kernel version based on system
-      macro(get_WIN32_WINNT version)
-        if (CMAKE_SYSTEM_VERSION)
-            set(ver ${CMAKE_SYSTEM_VERSION})
-            string(REGEX MATCH "^([0-9]+).([0-9])" ver ${ver})
-            string(REGEX MATCH "^([0-9]+)" verMajor ${ver})
-            # Check for Windows 10, b/c we'll need to convert to hex 'A'.
-            if ("${verMajor}" MATCHES "10")
-                set(verMajor "A")
-                string(REGEX REPLACE "^([0-9]+)" ${verMajor} ver ${ver})
-            endif ("${verMajor}" MATCHES "10")
-            # Remove all remaining '.' characters.
-            string(REPLACE "." "" ver ${ver})
-            # Prepend each digit with a zero.
-            string(REGEX REPLACE "([0-9A-Z])" "0\\1" ver ${ver})
-            set(${version} "0x${ver}")
-        endif(CMAKE_SYSTEM_VERSION)
-      endmacro(get_WIN32_WINNT)
-      get_WIN32_WINNT(ver)
-
-      # Windows-only definitions | Specifies WinNT kernel to build for
-      list(APPEND _VCASH_DEFINITIONS
-        "-D_WIN32_WINNT=${ver}"
-      )
-    ENDIF()
-    # Windows-only definitions
+    # Copy-paste from https://stackoverflow.com/a/40217291
+    # Gets correct WinNT kernel version based on system
+    macro(get_WIN32_WINNT version)
+      if (CMAKE_SYSTEM_VERSION)
+          set(ver ${CMAKE_SYSTEM_VERSION})
+          string(REGEX MATCH "^([0-9]+).([0-9])" ver ${ver})
+          string(REGEX MATCH "^([0-9]+)" verMajor ${ver})
+          # Check for Windows 10, b/c we'll need to convert to hex 'A'.
+          if ("${verMajor}" MATCHES "10")
+              set(verMajor "A")
+              string(REGEX REPLACE "^([0-9]+)" ${verMajor} ver ${ver})
+          endif ("${verMajor}" MATCHES "10")
+          # Remove all remaining '.' characters.
+          string(REPLACE "." "" ver ${ver})
+          # Prepend each digit with a zero.
+          string(REGEX REPLACE "([0-9A-Z])" "0\\1" ver ${ver})
+          set(${version} "0x${ver}")
+      endif(CMAKE_SYSTEM_VERSION)
+    endmacro(get_WIN32_WINNT)
+    get_WIN32_WINNT(ver)
+    
+    # Windows-only definitions | Specifies WinNT kernel to build for
     list(APPEND _VCASH_DEFINITIONS
-      "-DWIN32_LEAN_AND_MEAN"
+      "-D_WIN32_WINNT=${ver}"
     )
   ENDIF()
 
