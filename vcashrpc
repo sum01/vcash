@@ -17,12 +17,12 @@ while getopts ":m:p:" o; do
       fi
     ;;
     *)
-      printf "\nUsage: ./vcashrpc.sh -m <method> -p <params>\n
+      printf "\nUsage: vcashrpc -m <method> -p <params>\n
       Example commands:\n
-        ./vcashrpc.sh -m getincentiveinfo\n
-        ./vcashrpc.sh -m getblockhash -p 1\n
-        ./vcashrpc.sh -m sendtoaddress -p '[\"address\",amount]'\n
-        ./vcashrpc.sh -m listreceivedbyaccount -p '{\"minconf\":1,\"includeempty\":true}'\n"
+        vcashrpc -m getincentiveinfo\n
+        vcashrpc -m getblockhash -p 1\n
+        vcashrpc -m sendtoaddress -p '[\"address\",amount]'\n
+        vcashrpc -m listreceivedbyaccount -p '{\"minconf\":1,\"includeempty\":true}'\n"
       exit 1
     ;;
   esac
