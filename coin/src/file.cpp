@@ -21,6 +21,9 @@
 
 #if (defined _MSC_VER)
 #include <io.h>
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
 #include <windows.h>
 #else
 #include <stdio.h>
