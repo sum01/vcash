@@ -1,0 +1,53 @@
+# version format
+# Example for 5th build of master branch: 5-master
+version: '{build}-{branch}'
+
+# Build worker image (VM template) | Similar to OS on TravisCI
+# List of what is pre-intalled https://www.appveyor.com/docs/build-environment
+image: Visual Studio 2017
+
+# git clone specific commit as zip (faster)
+# https://www.appveyor.com/docs/how-to/repository-shallow-clone/#downloading-repository-via-github-or-bitbucket-api
+shallow_clone: false
+# Name the folder to clone to, so we can cd to it later
+clone_folder: C:\projects\vcash
+
+# Caches to speed up building
+cache:
+  # Keeps Berkeley DB cached unless .appveyor.yml changes
+  - C:\Program Files (x86)\Oracle\Berkeley DB 12cR1 6.1.36\ -> .appveyor.yml
+
+# Install extra dependencies
+# Openssl and Boost are pre-intalled, so we only need Berkeley DB
+install:
+  - git submodule update --init --recursive
+  - mkdir C:\projects\install_berkeleydb # Keep the Vcash folder clean
+  - cd C:\projects\install_berkeleydb
+  - curl -sSO http://download.oracle.com/berkeley-db/db-6.1.36.msi # Download Berkeley DB installer, only output errors
+  - msiexec.exe /i "C:\projects\install_berkeleydb\db-6.1.36.msi" /quiet /qn /norestart /Lwemo BERKELEYDB_install.log # Install Berkeley DB, log warnings/errors
+
+# build platform, i.e. x86, x64, Any CPU.
+platform: x64
+# build Configuration, i.e. Debug, Release, etc.
+configuration: Debug
+
+# Create the Vcash.sln file via cmake
+# find_package(Boost) fails without passing paths
+# Toolset errors unless using -T
+before_build:
+  - cd C:\projects\vcash
+  - cmake -DBERKELEYDB_ROOT:PATH="C:\Program Files (x86)\Oracle\Berkeley DB 12cR1 6.1.36" -DBOOST_ROOT:PATH=C:\Libraries\boost_1_64_0 -DBOOST_LIBRARYDIR:PATH=C:\Libraries\boost_1_64_0\lib64-msvc-14.1 -DBUILD_VCASH_CRAWLER=ON -DBUILD_VCASH_DATABASE=ON -G "Visual Studio 15 2017" CMakeLists.txt
+
+# The actual compilation command, using msbuild (MSVC) with automatic logging
+# build:
+  # parallel: true # Increase build speed
+  # project: Vcash.sln
+  # verbosity: minimal # quiet/minimal/normal/detailed | normal/detailed are too verbose.
+
+build_script:
+  - MSBuild.exe Vcash.sln /p:Configuration=Debug /p:Platform=x64 /verbosity:minimal
+
+# Dumps CMake error log so it's viewable on Appveyor
+on_failure:
+  - type C:\projects\install_berkeleydb\BERKELEYDB_install.log
+  - type C:\projects\vcash\CMakeFiles\CMakeError.log
