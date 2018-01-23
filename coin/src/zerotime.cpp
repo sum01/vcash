@@ -328,16 +328,16 @@ std::int16_t zerotime::calculate_score(const zerotime_vote & ztvote)
 	std::int16_t ret = -1;
 
 	if (
-        globals::instance().is_client_spv() == false &&
-        ztvote.block_height() == 0 ||
+        (globals::instance().is_client_spv() == false &&
+        ztvote.block_height() == 0) ||
         ztvote.block_height() > globals::instance().best_block_height()
         )
 	{
         // ...
 	}
 	else if (
-        globals::instance().is_client_spv() == true &&
-        ztvote.block_height() == 0 ||
+        (globals::instance().is_client_spv() == true &&
+        ztvote.block_height() == 0) ||
         ztvote.block_height() > globals::instance().spv_best_block_height()
         )
 	{

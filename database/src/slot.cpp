@@ -843,7 +843,7 @@ std::uint32_t slot::crc32(const std::uint32_t & crc, const std::uint32_t & word)
     v3 = word >> 8;
 
     data = 0;
-    index = (std::uint8_t)word ^ *(std::uint32_t *)&crc & 0xFF;
+    index = (std::uint8_t)word ^ (*(std::uint32_t *)&crc & 0xFF);
     std::memcpy((char *)&data, (char *)crc32_table + index * 4, 4);
     v4 = (*(std::uint32_t *)&crc >> 8) ^ data;
 
