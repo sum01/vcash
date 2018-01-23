@@ -20,6 +20,7 @@ The format is based on [Keep a Changelog.](http://keepachangelog.com/en/1.0.0/)
 ### Changed
 
 * Boost-build updates
+* GCC workaround to only affect compiler versions with the bug.
 
 ### Fixed
 
