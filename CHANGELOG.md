@@ -28,6 +28,7 @@ The format is based on [Keep a Changelog.](http://keepachangelog.com/en/1.0.0/)
 * Some Windows errors
 * Some compiler warnings on GCC & Clang
 * [#28](https://github.com/openvcash/vcash/issues/28) disabled ipv6 rpc bug
+* Potential undefined code when a variable was accessed after `free`ing it's memory.
 
 ## [0.6.0.4] - 2017-06-09
 

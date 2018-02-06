@@ -88,14 +88,20 @@ DIR * opendir(const char *name)
             else
             {
                 free(dir->name);
-                free(dir), dir = 0;
+                free(dir);
+                // Return a new DIR that hasn't been manually allocated
+                DIR * newdir = 0;
+                return newdir;
             }
         }
         else
         {
-            free(dir), dir = 0;
-            
             errno = ENOMEM;
+            free(dir->name);
+            free(dir);
+            // Return a new DIR that hasn't been manually allocated
+            DIR * newdir = 0;
+            return newdir;
         }
     }
     else
