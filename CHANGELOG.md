@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog.](http://keepachangelog.com/en/1.0.0/)
 * `CreateRawTransaction` RPC
 * `GetUnconfirmedBalance` RPC
 * `DecodeScript` RPC
+* An `.editorconfig` file for easier editing.
 
 ### Changed
 
