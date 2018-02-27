@@ -17,6 +17,6 @@ target_include_directories(crawler
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
-IF(INSTALL_LIBCRAWLER)
-  install_and_export("crawler")
+IF(VCASH_INSTALL_LIBS)
+	install_and_export("crawler")
 ENDIF()

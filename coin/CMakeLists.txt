@@ -123,6 +123,6 @@ target_include_directories(coin
   PUBLIC ${BERKELEYDB_INCLUDE_DIRS}
 )
 
-IF(INSTALL_LIBCOIN)
-  install_and_export("coin")
+IF(VCASH_INSTALL_LIBS)
+	install_and_export("coin")
 ENDIF()

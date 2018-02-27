@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.1 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
 #[[
 Minimum version requirement list:
 - 3.0 for versioning inside of project()
@@ -8,15 +8,6 @@ Minimum version requirement list:
 For cross-compiling, read https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html#cross-compiling-toolchain ...
 and when cross-compiling for Windows, use the Cmake flag -D_WIN32_WINNT=XXXXX | literal format expected, ex: "0x0501" ...
 Accepted values for _WIN32_WINNT are here https://docs.microsoft.com/en-us/cpp/porting/modifying-winver-and-win32-winnt
-
-Use -DBUILD_VCASH_CRAWLER=ON to build the crawler (OFF by default)
-Use -DBUILD_VCASH_DATABASE=ON to build to database (OFF by default)
-Use -DBUILD_VCASH_DAEMON=OFF to NOT build the daemon (ON by default)
-
-For devs...
-Use -DINSTALL_LIBCOIN=ON to install the "coin" library
-Use -DINSTALL_LIBCRAWLER=ON to install the "crawler" library
-Use -DINSTALL_LIBDATABASE=ON to install the "database" library
 
 Everything is built static, so headers aren't provided/installed.
 ]]
@@ -49,17 +40,17 @@ ELSEIF(NOT CMAKE_BUILD_TYPE)
 ENDIF()
 
 # Flags to tell cmake which targets you want to build
-option(BUILD_VCASH_DAEMON "Build the Vcash daemon executable." ON)
-option(BUILD_VCASH_CRAWLER "Build the Vcash crawler executable." OFF)
-option(BUILD_VCASH_DATABASE "Build the Vcash database executable." OFF)
-option(INSTALL_LIBCOIN "Installs libcoin for dev use." OFF)
-option(INSTALL_LIBCRAWLER "Installs libcrawler for dev use." OFF)
-option(INSTALL_LIBDATABASE "Installs libdatabase for dev use." OFF)
+option(VCASH_BUILD_DAEMON "Build the Vcash daemon executable." ON)
+option(VCASH_BUILD_CRAWLER "Build the Vcash crawler executable." OFF)
+option(VCASH_BUILD_DATABASE "Build the Vcash database executable." OFF)
+option(VCASH_INSTALL_LIBS "Builds and installs all libs for dev use." OFF)
 
 # Adds our custom modules to the list of modules available for cmake
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules/FindBerkeleyDB")
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules/install_and_export")
+list(APPEND CMAKE_MODULE_PATH
+	"${CMAKE_SOURCE_DIR}/cmake/modules"
+	"${CMAKE_SOURCE_DIR}/cmake/modules/FindBerkeleyDB"
+	"${CMAKE_SOURCE_DIR}/cmake/modules/install_and_export"
+)
 # Runs find_package() commands and checks if versions are compatible
 include(vcash_dependencies)
 # Adds our list of custom definitions to the compiler definitions to correctly build Vcash
@@ -68,14 +59,14 @@ include(vcash_definitions)
 # Initialize our install_and_export macro
 include(install_and_export)
 
-# Build libdatabase | All executables use libdatabase, so we declare outside IF() checks
+# Build libdatabase | Everything uses libdatabase, so we declare outside IF() checks
 add_subdirectory(database)
 
-IF(BUILD_VCASH_DAEMON OR INSTALL_LIBCOIN)
+IF(VCASH_BUILD_DAEMON OR VCASH_INSTALL_LIBS)
   # Build libcoin
   add_subdirectory(coin)
 ENDIF()
-IF(BUILD_VCASH_DAEMON)
+IF(VCASH_BUILD_DAEMON)
   add_executable(vcashd coin/test/main.cpp)
 
   target_link_libraries(vcashd
@@ -96,11 +87,11 @@ IF(BUILD_VCASH_DAEMON)
   ENDIF()
 ENDIF()
 
-IF(BUILD_VCASH_CRAWLER OR INSTALL_LIBCRAWLER)
+IF(VCASH_BUILD_CRAWLER OR VCASH_INSTALL_LIBS)
   # Build libcrawler
   add_subdirectory(crawler)
 ENDIF()
-IF(BUILD_VCASH_CRAWLER)
+IF(VCASH_BUILD_CRAWLER)
   add_executable(vcashc crawler/test/stack.cpp)
 
   target_link_libraries(vcashc
@@ -111,7 +102,7 @@ IF(BUILD_VCASH_CRAWLER)
   install_and_export("vcashc")
 ENDIF()
 
-IF(BUILD_VCASH_DATABASE)
+IF(VCASH_BUILD_DATABASE)
   # Doesn't require any other libs (libdatabase was already built above)
   add_executable(vcashdb database/test/stack.cpp)
 

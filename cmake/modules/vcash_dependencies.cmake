@@ -22,11 +22,11 @@ find_package(OpenSSL "1.0.1" REQUIRED)
 max_ver_allowed("OpenSSL" ${OPENSSL_VERSION} "1.0.2")
 
 # Only libcoin needs Berkeley DB
-IF(BUILD_VCASH_DAEMON OR INSTALL_LIBCOIN)
+IF(VCASH_BUILD_DAEMON OR VCASH_INSTALL_LIBS)
   # ~~ Berkeley DB ~~
   # Prevent accidental building with DB v5, which isn't compatible with wallets built with DB v6
-  option(WITH_INCOMPATIBLE_BDB "Enables building with a Berkeley DB v5 minimum instead of v6 minimum." OFF)
-  IF(WITH_INCOMPATIBLE_BDB)
+  option(VCASH_USE_OLD_BERKELEY "Enables building with a Berkeley DB v5 minimum instead of v6 minimum." OFF)
+  IF(VCASH_USE_OLD_BERKELEY)
     set(BERKELEYDB_MIN_VER "5.0.0")
   ELSE()
     set(BERKELEYDB_MIN_VER "6.0.0")

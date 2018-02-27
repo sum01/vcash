@@ -41,6 +41,6 @@ target_include_directories(database
   PUBLIC ${OPENSSL_INCLUDE_DIR}
 )
 
-IF(INSTALL_LIBDATABASE)
-  install_and_export("database")
+IF(VCASH_INSTALL_LIBS)
+	install_and_export("database")
 ENDIF()
