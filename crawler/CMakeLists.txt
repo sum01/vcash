@@ -17,6 +17,8 @@ target_include_directories(crawler
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
+set_target_properties(crawler PROPERTIES OUTPUT_NAME "xvc-crawler")
+
 IF(VCASH_INSTALL_LIBS)
 	install_and_export("crawler")
 ENDIF()

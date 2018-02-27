@@ -123,6 +123,8 @@ target_include_directories(coin
   PUBLIC ${BERKELEYDB_INCLUDE_DIRS}
 )
 
+set_target_properties(coin PROPERTIES OUTPUT_NAME "xvc-coin")
+
 IF(VCASH_INSTALL_LIBS)
 	install_and_export("coin")
 ENDIF()

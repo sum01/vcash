@@ -41,6 +41,8 @@ target_include_directories(database
   PUBLIC ${OPENSSL_INCLUDE_DIR}
 )
 
+set_target_properties(database PROPERTIES OUTPUT_NAME "xvc-database")
+
 IF(VCASH_INSTALL_LIBS)
 	install_and_export("database")
 ENDIF()
