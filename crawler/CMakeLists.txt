@@ -14,7 +14,8 @@ target_link_libraries(crawler
 )
 
 target_include_directories(crawler
-  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/crawler>
+  PUBLIC $<INSTALL_INTERFACE:include/crawler>
 )
 
 set_target_properties(crawler PROPERTIES OUTPUT_NAME "xvc-crawler")

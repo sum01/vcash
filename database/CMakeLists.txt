@@ -36,7 +36,8 @@ target_link_libraries(database
 )
 
 target_include_directories(database
-  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/database>
+  PUBLIC $<INSTALL_INTERFACE:include/database>
   PUBLIC ${Boost_INCLUDE_DIRS}
   PUBLIC ${OPENSSL_INCLUDE_DIR}
 )

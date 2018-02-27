@@ -119,7 +119,8 @@ target_link_libraries(coin
 )
 
 target_include_directories(coin
-  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/coin>
+  PUBLIC $<INSTALL_INTERFACE:include/coin>
   PUBLIC ${BERKELEYDB_INCLUDE_DIRS}
 )
 
