@@ -20,9 +20,11 @@ install:
 script:
   # WITH_INCOMPATIBLE_BDB is needed because Ubuntu is on v5 Berkeley DB
   # OPENSSL_ROOT_DIR is needed because FindOpenSSL fails on macOS without it
-  - _sharedsettings="-DCMAKE_BUILD_TYPE=Debug -DBUILD_VCASH_CRAWLER=ON -DBUILD_VCASH_DATABASE=ON CMakeLists.txt"
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cmake -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl ${_sharedsettings}; else cmake -DWITH_INCOMPATIBLE_BDB=ON ${_sharedsettings}; fi
-  - make
+  - _sharedsettings="-DCMAKE_BUILD_TYPE=Debug ../bin/vcashd/CMakeLists.txt"
+  - mkdir -p build
+  - cd build
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cmake -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl ${_sharedsettings}; else cmake ${_sharedsettings}; fi
+  - make -j$(nproc)
 notifications:
   webhooks:
     urls:
